@@ -120,7 +120,7 @@ def padded_range(start: str, end: str):
 
 def add_income_expense(data):
     for line in data:
-        line['Art'] = "Einnahme" if line["Titel"][0] in ["0", "1", "2", "3"] else "Ausabe"
+        line['Art'] = "Einnahme" if line["Titel"][0] in ["0", "1", "2", "3"] else "Ausgabe"
     return data
 
 

@@ -129,7 +129,7 @@ def enrich(haushalt, functions, groups):
         line["Funktion 2"] = functions[funktion[:2]]
         line["Funktion 1"] = functions[funktion[:1]]
         line = add_chapters(line)
-        line['Art'] = "Einnahme" if line["Kapitel"][:2] in ["00", "01", "02", "03"] else "Ausabe"
+        line['Art'] = "Einnahme" if line["Kapitel"][:2] in ["00", "01", "02", "03"] else "Ausgabe"
 
     return haushalt
 

@@ -6,6 +6,46 @@ import os
 BASE_PATH = "/Users/knut/projects/offenerhaushalt.de/bremen"
 
 
+def read_chapters():
+    chapters = {}
+    with open("./kapitel.csv") as infile:
+        reader = csv.reader(infile)
+        for line in reader:
+            chapters[line[0]] = line[1]
+    return chapters
+
+
+def add_chapters(line):
+    # These were extracted by hand from the PDFs from the website
+    einzelplan = {
+        "00": "Bürgerschaft, Senat, Rechnungshof, Staatsgerichtshof, Bundesangelegenheiten, Datenschutz, Inneres, Frauen (L)",
+        "01": "Justiz und Verfassung (L)",
+        "02": "Kinder und Bildung, Kultur und Wissenschaft (L)",
+        "03": "Arbeit (L)",
+        "04": "Jugend, Soziales, Integration (L)",
+        "05": "Gesundheit (L)",
+        "06": "Umwelt, Bau und Verkehr (L)",
+        "07": "Wirtschaft (L)",
+        "08": "Häfen (L)",
+        "09": "Finanzen (L)",
+        "30": "Bürgerschaft, Senat, Inneres (S)",
+        "31": "Sport (S)",
+        "32": "Kinder und Bildung, Kultur (S)",
+        "33": "Arbeit (S)",
+        "34": "Jugend, Soziales (S)",
+        "35": "Gesundheit (S)",
+        "36": "Umwelt, Bau und Verkehr (S)",
+        "37": "Wirtschaft (S)",
+        "38": "Häfen (S)",
+        "39": "Finanzen (S)"
+    }
+    kapitel = read_chapters()
+    line["Einzelplan_Name"] = einzelplan[line["Hst."][:2]]
+    line["Kapitel_Name"] = kapitel.get(line["Hst."][:4], "[keine Angabe ({})]".format(line["Hst."][:4]))
+
+    return line
+
+
 def save_as_json(data, name):
     with open(os.path.join(BASE_PATH, "bremen-{}.json".format(name)), "w") as outfile:
         json.dump(data, outfile, indent=2, ensure_ascii=False)
@@ -83,6 +123,7 @@ def enrich_haushalt():
             line["Funktion 2"] = functions[funktion[:2] + "*"]
             line["Funktion 1"] = functions[funktion[:1] + "**"]
             line["Art"] = "Einnahmen" if line["Aggregat"].startswith("EINN") else "Ausgaben"
+            add_chapters(line)
         split = split_years(reader)
         save_data(split)
 

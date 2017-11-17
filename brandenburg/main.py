@@ -4,23 +4,18 @@ import os
 from collections import defaultdict
 
 
-def add_chapters(line):
-    # These are the same in all of Germany
-    hauptgruppen = {
-        "0": "Steuern, Allgemeine Zuweisungen",
-        "1": "Einnahmen aus Verwaltung und Betrieb",
-        "2": "Sonstige Finanzeinnahmen",
-        "3": "Einnahmen des Vermögenshaushaltes",
-        "4": "Personalausgaben",
-        "5": "Sächlicher Verwaltungs- und Betriebsaufwand",
-        "6": "Sächlicher Verwaltungs- und Betriebsaufwand",
-        "7": "Zuweisungen und Zuschüsse (nicht für Investitionen)",
-        "8": "Sonstige Finanzausgaben",
-        "9": "Ausgaben des Vermögenshaushaltes",
-    }
+def read_chapters():
+    chapters = {}
+    with open("./kapitel.csv") as infile:
+        reader = csv.reader(infile, delimiter=";")
+        for line in reader:
+            chapters[line[0]] = line[1]
+    return chapters
 
-    # These were extracted by us
-    gruppe = {
+
+def add_chapters(line):
+    # These were extracted by hand from the website
+    einzelplan = {
         "01": "Landtag",
         "02": "Ministerpräsidentin, Ministerpräsident und Staatskanzlei",
         "03": "Ministerium des Innern und für Kommunales",
@@ -36,8 +31,9 @@ def add_chapters(line):
         "14": "Verfassungsgericht des Landes Brandenburg",
         "20": "Allgemeine Finanzverwaltung",
     }
-    line["Kapitel_Name"] = hauptgruppen[line["Kapitel"][:1]]
-    line["Einzelplan_Name"] = gruppe.get(line["Kapitel"][2:4], "N/A")
+    kapitel = read_chapters()
+    line["Einzelplan_Name"] = einzelplan[line["Kapitel"][:2]]
+    line["Kapitel_Name"] = kapitel[line["Kapitel"][:5]]
 
     return line
 

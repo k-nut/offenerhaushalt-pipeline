@@ -3,23 +3,18 @@ import json
 import os
 
 
-def add_chapters(line):
-    # These are the same in all of Germany
-    einzelplan = {
-        "0": "Steuern, Allgemeine Zuweisungen",
-        "1": "Einnahmen aus Verwaltung und Betrieb",
-        "2": "Sonstige Finanzeinnahmen",
-        "3": "Einnahmen des Vermögenshaushaltes",
-        "4": "Personalausgaben",
-        "5": "Sächlicher Verwaltungs- und Betriebsaufwand",
-        "6": "Sächlicher Verwaltungs- und Betriebsaufwand",
-        "7": "Zuweisungen und Zuschüsse (nicht für Investitionen)",
-        "8": "Sonstige Finanzausgaben",
-        "9": "Ausgaben des Vermögenshaushaltes",
-    }
+def read_chapters():
+    chapters = {}
+    with open("./kapitel.csv") as infile:
+        reader = csv.reader(infile)
+        for line in reader:
+            chapters[line[0]] = line[1]
+    return chapters
 
-    # These were extracted by us
-    kapitel = {
+
+def add_chapters(line):
+    # These were extracted by hand from the website
+    einzelplan = {
         "01": "Landtag",
         "02": "Landesrechnungshof",
         "03": "Ministerpräsident, Staatskanzlei",
@@ -36,8 +31,9 @@ def add_chapters(line):
         "15": "Landesverfassungsgericht",
         "16": "InfrastrukturModernisierungsProgramm für unser Land Schleswig-Holstein (Impuls 2030)",
     }
-    line["Kapitel_Name"] = kapitel[line["Kapitel"][:2]]
-    line["Einzelplan_Name"] = gruppe[line["Kapitel"][1:3]]
+    kapitel = read_chapters()
+    line["Einzelplan_Name"] = einzelplan[line["Kapitel"][:2]]
+    line["Kapitel_Name"] = kapitel.get(line["Kapitel"][:4], "[keine Angabe]")
 
     return line
 

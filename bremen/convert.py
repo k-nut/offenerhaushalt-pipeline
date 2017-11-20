@@ -3,7 +3,7 @@ import json
 import os
 
 
-BASE_PATH = "/Users/knut/projects/offenerhaushalt.de/bremen"
+BASE_PATH = "C:/Users/Michael/Documents/GitHub/offenerhaushalt-pipeline/bremen"
 
 
 def read_chapters():

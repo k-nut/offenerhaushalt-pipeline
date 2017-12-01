@@ -107,7 +107,6 @@ def split_years(data):
     return new_haushalt
 
 
-
 def enrich_haushalt():
     with open(os.path.join(BASE_PATH, "Haushaltsdaten_2016-2017.csv")) as infile:
         reader = list(csv.DictReader(infile))
@@ -115,11 +114,11 @@ def enrich_haushalt():
         functions = get_json("funktionen")
         for line in reader:
             gruppe = line['Hst.'][5:8]
-            funktion = line['FKZ']
+            funktion = line['FKZ'].zfill(3)
             line["Gruppe 3"] = groups.get(gruppe, "N/A")
             line["Gruppe 2"] = groups[gruppe[:2] + "*"]
             line["Gruppe 1"] = groups[gruppe[:1] + "**"]
-            line["Funktion 3"] = functions.get(funktion, "N/A")
+            line["Funktion 3"] = functions[funktion]
             line["Funktion 2"] = functions[funktion[:2] + "*"]
             line["Funktion 1"] = functions[funktion[:1] + "**"]
             line["Art"] = "Einnahmen" if line["Aggregat"].startswith("EINN") else "Ausgaben"

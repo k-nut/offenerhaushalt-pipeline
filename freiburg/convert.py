@@ -1,6 +1,6 @@
 from csv import DictReader, DictWriter
 
-FILENAME = "C:/Users/Michael/Documents/GitHub/offenerhaushalt-pipeline/freiburg/freiburg_neu.csv"
+FILENAME = "./freiburg_neu.csv"
 
 
 def read_data():
@@ -37,8 +37,8 @@ def split(data):
 
 
 def write_data(data):
-    with open("C:/Users/Michael/Documents/GitHub/offenerhaushalt-pipeline/freiburg/haushalt-freiburg-enriched.csv", "w") as outfile:
-        writer = DictWriter(outfile, fieldnaames=data[0].keys())
+    with open("./haushalt-freiburg-enriched.csv", "w") as outfile:
+        writer = DictWriter(outfile, fieldnames=data[0].keys())
         writer.writeheader()
         for line in data:
             writer.writerow(line)

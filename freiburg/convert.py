@@ -37,7 +37,7 @@ def split(data):
 
 
 def write_data(data):
-    with open("./haushalt-freiburg-enriched.csv", "w") as outfile:
+    with open("./haushalt-freiburg-enriched.csv", "w", newline = '') as outfile:
         writer = DictWriter(outfile, fieldnames=data[0].keys())
         writer.writeheader()
         for line in data:
